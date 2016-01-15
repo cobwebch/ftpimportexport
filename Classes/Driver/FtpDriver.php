@@ -185,7 +185,17 @@ class FtpDriver extends AbstractDriver {
 	 * @return boolean
 	 */
 	public function put($localPath, $remotePath) {
-		return ftp_put($this->handle, $remotePath, $localPath, FTP_BINARY);
+		$directory = dirname($remotePath);
+		$file = basename($remotePath);
+		// Create the storage directory as needed
+		// NOTE: this is changing to the given directory no matter the result
+		if (!$this->directoryExists($directory)) {
+			$this->createDirectory($directory);
+		}
+		$result = ftp_put($this->handle, $file, $localPath, FTP_BINARY);
+		// Change back to root path
+		$this->changeDirectory('/');
+		return $result;
 	}
 
 	/**
