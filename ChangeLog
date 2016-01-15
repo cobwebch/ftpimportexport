@@ -1,0 +1,7 @@
+2013-12-17  Francois Suter <typo3@cobweb.ch>
+
+	* Full rewrite, refactoring, namespaces, etc.
+
+2012-09-10  Cobweb - MDI  <typo3@cobweb.ch>
+
+	* Initial code generated with kickstarter

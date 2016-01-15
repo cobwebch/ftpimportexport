@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="fr" datatype="plaintext" original="messages" date="2013-08-30T10:31:56Z" product-name="ftpimportexport">
+		<header/>
+		<body>
+			<trans-unit id="tx_ftpimportexport_records">
+				<source>FTP Configuration</source>
+				<target>Configuration FTP</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.title">
+				<source>Title</source>
+				<target>Titre</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.local_path">
+				<source>Local path</source>
+				<target>Chemin local</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.remote_path">
+				<source>Remote path</source>
+				<target>Chemin distant</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.source_path_import">
+				<source>Remote path to import from</source>
+				<target>Chemin distant à partir duquel importer</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.target_path_import">
+				<source>Local path to import to</source>
+				<target>Chemin local vers lequel importer</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.source_path_export">
+				<source>Local path to export from</source>
+				<target>Chemin local à partir duquel exporter</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.target_path_export">
+				<source>Remote path to export to</source>
+				<target>Chemin distant vers lequel exporter</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.pattern">
+				<source>List of file types to match</source>
+				<target>Format des fichiers à traiter</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.ftp_host">
+				<source>FTP Host</source>
+				<target>Hôte FTP</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.ftp_user">
+				<source>FTP User</source>
+				<target>Utilisateur FTP</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.ftp_password">
+				<source>FTP Password</source>
+				<target>Mot de passe FTP</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.transfer_type">
+				<source>Transfer type</source>
+				<target>Type de transfert</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.transfer_type.import">
+				<source>Import</source>
+				<target>Import</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.transfer_type.export">
+				<source>Export</source>
+				<target>Export</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.tab.post_processing">
+				<source>Post-processing</source>
+				<target>Post-traitement</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing">
+				<source>After sucessful transfer do</source>
+				<target>Après un transfert réussi</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing.nothing">
+				<source>Nothing</source>
+				<target>Ne rien faire</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing.move">
+				<source>Move transferred files</source>
+				<target>Déplacer les fichiers transférés</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing.delete">
+				<source>Delete transferred files</source>
+				<target>Supprimer les fichiers transférés</target>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing_path">
+				<source>Move to</source>
+				<target>Déplacer vers</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

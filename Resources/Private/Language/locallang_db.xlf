@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-08-30T10:31:56Z" product-name="ftpimportexport">
+		<header/>
+		<body>
+			<trans-unit id="tx_ftpimportexport_records">
+				<source>FTP Configuration</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.title">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.source_path_import">
+				<source>Remote path to import from</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.target_path_import">
+				<source>Local path to import to</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.source_path_export">
+				<source>Local path to export from</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.target_path_export">
+				<source>Remote path to export to</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.pattern">
+				<source>List of file types to match</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.ftp_host">
+				<source>FTP Host</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.ftp_user">
+				<source>FTP User</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.ftp_password">
+				<source>FTP Password</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.transfer_type">
+				<source>Transfer type</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.transfer_type.import">
+				<source>Import</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.transfer_type.export">
+				<source>Export</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.tab.post_processing">
+				<source>Post-processing</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing">
+				<source>After sucessful transfer do</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing.nothing">
+				<source>Nothing</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing.move">
+				<source>Move transferred files</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing.delete">
+				<source>Delete transferred files</source>
+			</trans-unit>
+			<trans-unit id="tx_ftpimportexport_records.post_processing_path">
+				<source>Move to</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

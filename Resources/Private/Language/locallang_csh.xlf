@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-08-30T10:31:56Z" product-name="ftpimportexport">
+		<header/>
+		<body>
+			<trans-unit id=".description">
+				<source>Configuration for import or export of files to/from FTP servers and the local file system. For local paths outside the web root, don't forget to set $GLOBALS['TYPO3_CONF_VARS']['BE']['lockRootPath'].</source>
+			</trans-unit>
+			<trans-unit id="hidden.description">
+				<source>Disabled configurations are ignored when the Scheduler task is set to run all configurations.</source>
+			</trans-unit>
+			<trans-unit id="title.description">
+				<source>Enter some useful title. This field is purely informational.</source>
+			</trans-unit>
+			<trans-unit id="source_path.description">
+				<source>Path from which files will be imported or exported.</source>
+			</trans-unit>
+			<trans-unit id="target_path.description">
+				<source>Path to which file will be imported or exported.</source>
+			</trans-unit>
+			<trans-unit id="pattern.description">
+				<source>Comma-separated list of file extensions to match (e.g. "csv,txt").</source>
+			</trans-unit>
+			<trans-unit id="pattern.details">
+				<source>Consider setting this to a restrictive set of extensions for security reasons. Leaving this field empty will allow all files to be imported/exported. Wildcards are not supported.</source>
+			</trans-unit>
+			<trans-unit id="ftp_host.description">
+				<source>FTP server involved in the import/export process.</source>
+			</trans-unit>
+			<trans-unit id="ftp_user.description">
+				<source>User name on the FTP server.</source>
+			</trans-unit>
+			<trans-unit id="ftp_password.description">
+				<source>User password on the FTP server.</source>
+			</trans-unit>
+			<trans-unit id="transfer_type.description">
+				<source>Type of transfer. An import will fetch files from the FTP server and store them locally. An export will push local files to the FTP server.</source>
+			</trans-unit>
+			<trans-unit id="post_processing.description">
+				<source>What action to perform after files were transferred. Note that only successfully transferred files are affected.</source>
+			</trans-unit>
+			<trans-unit id="post_processing_path.description">
+				<source>The path to which the files will be moved, if the post-processing action is of type "move".</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

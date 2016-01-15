@@ -1,0 +1,2 @@
+# cat=basic/enable/b; type=boolean; label=Debug: Turn debugging on or off (this requires a devlog-enabling extension)
+debug = 0
