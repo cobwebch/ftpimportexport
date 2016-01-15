@@ -24,6 +24,8 @@ namespace Cobweb\Ftpimportexport\Driver;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Implementation of the abstract driver for a FTP server.
  *
@@ -111,15 +113,15 @@ class FtpDriver extends AbstractDriver {
 	 * @return boolean
 	 */
 	public function createDirectory($path) {
-		// First try to change to the given directory.
+        // First try to change to the given directory.
 		if (!$this->directoryExists($path)) {
-			$pathParts = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('/', $path, TRUE);
+			$pathParts = GeneralUtility::trimExplode('/', $path, TRUE);
 			foreach ($pathParts as $subPath) {
-				if (!$this->directoryExists($subPath)) {
+                if (!$this->directoryExists($subPath)) {
 					ftp_mkdir($this->handle, $subPath);
-					$this->changeDirectory($subPath);
 				}
-			}
+                $this->changeDirectory($subPath);
+            }
 		}
 	}
 
@@ -196,4 +198,3 @@ class FtpDriver extends AbstractDriver {
 		return ftp_nlist($this->handle, $path);
 	}
 }
-?>
