@@ -24,6 +24,7 @@ namespace Cobweb\Ftpimportexport\Controller;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Cobweb\Ftpimportexport\Exception\ImportExportException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -60,10 +61,11 @@ class ImportExport {
 	 *
 	 * @param array $ftp Import/export configuration (from DB record)
 	 * @return bool Result of the run
+	 * @throws ImportExportException
 	 */
 	public function run($ftp) {
 		$this->setValidFileExtensions($ftp['pattern']);
-		if ($ftp['transfer_type'] == 'export') {
+		if ($ftp['transfer_type'] === 'export') {
 			$result = $this->exportAction($ftp);
 		} else {
 			$result = $this->importAction($ftp);
@@ -76,7 +78,7 @@ class ImportExport {
 	 *
 	 * @param array $ftp Import/export configuration (from DB record)
 	 * @return bool Result of the action
-	 * @throws \Cobweb\Ftpimportexport\Exception\ImportExportException
+	 * @throws ImportExportException
 	 */
 	public function importAction($ftp) {
 		// Create the necessary drivers
@@ -121,7 +123,7 @@ class ImportExport {
 			if ($this->extensionConfiguration['debug']) {
 				$message = 'Could not change to directory: ' . $ftp['source_path'];
 				GeneralUtility::devLog($message, 'ftpimportexport', 3);
-				throw new \Cobweb\Ftpimportexport\Exception\ImportExportException(
+				throw new ImportExportException(
 					$message,
 					1387272483
 				);
@@ -134,7 +136,7 @@ class ImportExport {
 	 * Performs an export of files according to the given FTP configuration.
 	 *
 	 * @param array $ftp Import/export configuration (from DB record)
-	 * @throws \Cobweb\Ftpimportexport\Exception\ImportExportException
+	 * @throws ImportExportException
 	 * @return bool Result of the action
 	 */
 	public function exportAction($ftp) {
@@ -149,7 +151,7 @@ class ImportExport {
 		$sourcePath = $fromDriver->validatePath($ftp['source_path']);
 		// Check that path is allowed
 		if (!$this->isValidExportPath($sourcePath)) {
-			throw new \Cobweb\Ftpimportexport\Exception\ImportExportException(
+			throw new ImportExportException(
 				sprintf('Invalid export path (%s)', $sourcePath),
 				1387272483
 			);
@@ -194,7 +196,7 @@ class ImportExport {
 			if ($this->extensionConfiguration['debug']) {
 				$message = 'Could not change to directory: ' . $sourcePath;
 				GeneralUtility::devLog($message, 'ftpimportexport', 3);
-				throw new \Cobweb\Ftpimportexport\Exception\ImportExportException(
+				throw new ImportExportException(
 					$message,
 					1387272483
 				);
@@ -301,4 +303,3 @@ class ImportExport {
 		return FALSE;
 	}
 }
-?>
