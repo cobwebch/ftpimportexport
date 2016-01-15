@@ -11,6 +11,7 @@ CREATE TABLE tx_ftpimportexport_records (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	transfer_type varchar(6) DEFAULT 'import' NOT NULL,
 	title varchar(255) DEFAULT '' NOT NULL,
+	recursive tinyint(4) DEFAULT '0' NOT NULL,
 	source_path varchar(255) DEFAULT '' NOT NULL,
 	target_path varchar(255) DEFAULT '' NOT NULL,
 	pattern varchar(255) DEFAULT '' NOT NULL,

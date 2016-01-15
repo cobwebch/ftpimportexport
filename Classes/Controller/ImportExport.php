@@ -24,6 +24,8 @@ namespace Cobweb\Ftpimportexport\Controller;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Cobweb\Ftpimportexport\Driver\FtpDriver;
+use Cobweb\Ftpimportexport\Driver\LocalDriver;
 use Cobweb\Ftpimportexport\Exception\ImportExportException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -51,6 +53,16 @@ class ImportExport {
 	 * @var array List of file extensions which are okay to be processed
 	 */
 	protected $validFilesExtensions = array();
+
+    /**
+     * @var LocalDriver
+     */
+    protected $toDriver = null;
+
+    /**
+     * @var FtpDriver
+     */
+    protected $fromDriver = null;
 
 	public function __construct(){
 		$this->extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['ftpimportexport']);
@@ -82,42 +94,22 @@ class ImportExport {
 	 */
 	public function importAction($ftp) {
 		// Create the necessary drivers
-		/** @var \Cobweb\Ftpimportexport\Driver\FtpDriver $fromDriver */
-		$fromDriver = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Driver\\FtpDriver');
-		$fromDriver->connect($ftp);
-		/** @var \Cobweb\Ftpimportexport\Driver\LocalDriver $toDriver */
-		$toDriver = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Driver\\LocalDriver');
+		$this->fromDriver = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Driver\\FtpDriver');
+		$this->fromDriver->connect($ftp);
+		$this->toDriver = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Driver\\LocalDriver');
 
 		// Validate target path. This may throw an exception, but we let it bubble up.
-		$targetPath = $toDriver->validatePath($ftp['target_path']);
+		$targetPath = $this->toDriver->validatePath($ftp['target_path']);
 
 		// Create target directory
-		$toDriver->createDirectory($targetPath);
+		$this->toDriver->createDirectory($targetPath);
 
-		if ($fromDriver->changeDirectory($ftp['source_path'])) {
-			$files = $fromDriver->fileList('');
-			$transferredFiles = array();
-			if ($this->extensionConfiguration['debug']) {
-				GeneralUtility::devLog('Files to handle', 'ftpimportexport', 0, $files);
-			}
-			foreach ($files as $aFile) {
-				// TODO: check what to do with directories (they are fetched, but with a warning). Maybe handle recursively (with a flag).
-				if ($this->isValidFile($aFile)) {
-					$targetFilename = $targetPath . $aFile;
-					$result = $fromDriver->get($aFile, $targetFilename);
-					if ($result) {
-						// Keep list of transferred files for post-processing
-						$transferredFiles[] = $aFile;
-					} else {
-						if ($this->extensionConfiguration['debug']) {
-							GeneralUtility::devLog('Could not get file: ' . $aFile, 'ftpimportexport', 2);
-						}
-					}
-				}
-			}
+		if ($this->fromDriver->changeDirectory($ftp['source_path'])) {
+			$transferredFiles = $this->getAllFiles($ftp['source_path'], $targetPath, $ftp['source_path'], $ftp['recursive']);
+
 			// Apply post-processing, if relevant
 			if (!empty($ftp['post_processing']) && count($transferredFiles) > 0) {
-				$this->postProcessAction($fromDriver, $transferredFiles, $ftp);
+				$this->postProcessAction($this->fromDriver, $transferredFiles, $ftp);
 			}
 		} else {
 			if ($this->extensionConfiguration['debug']) {
@@ -132,6 +124,61 @@ class ImportExport {
 		return TRUE;
 	}
 
+    /**
+     * Gets all files from the given folder.
+	 *
+     * @param $path string Path from which to get the files
+     * @param $targetPath string Path to save files to
+     * @param $sourcePath string Source path on the import server
+     * @param $recursive bool Set to true to explore file structure recursively
+	 * @return array List of transferred files
+     */
+    public function getAllFiles($path, $targetPath, $sourcePath, $recursive = TRUE) {
+		$transferredFiles = array();
+        // Get all files/folders in the current folder
+        $files = $this->fromDriver->fileList($path);
+        if ($this->extensionConfiguration['debug'] && count($files) > 2) {
+            GeneralUtility::devLog('Files to handle', 'ftpimportexport', 0, $files);
+        }
+
+        foreach ($files as $aFile) {
+            $pathInfo = pathinfo($aFile);
+            $isDirectory = $this->fromDriver->directoryExists($aFile);
+
+            // If the current file is not a directory, download it and add it to the list of transferred files
+            if (!$isDirectory && $this->isValidFile($aFile)) {
+                // Remove the source path from the full file path, so we can get the local path where the file will be stored
+                $relativePathInfo = pathinfo(str_replace($sourcePath, '', $aFile));
+
+                /** @var string $relativeFolderPath Relative path to the containing folder, starting from the source folder */
+                $relativeFolderPath = !in_array($relativePathInfo['dirname'], array('.', '..'), true) ? $relativePathInfo['dirname'] . '/' : '';
+
+                /** @var string $relativeFilePath Relative path to the file, starting from the source folder */
+                $relativeFilePath = $relativeFolderPath . $relativePathInfo['basename'];
+
+                // Create destination folder
+                $this->toDriver->createDirectory($targetPath . $relativeFolderPath);
+                $targetFilename = $targetPath . $relativeFilePath;
+                $result = $this->fromDriver->get($aFile, $targetFilename);
+
+                if ($result) {
+                    // Keep list of transferred files for post-processing
+                    $transferredFiles[] = $relativeFilePath;
+                } else {
+                    if ($this->extensionConfiguration['debug']) {
+                        GeneralUtility::devLog('Could not get file: ' . $aFile, 'ftpimportexport', 2);
+                    }
+                }
+
+			// If file is a directory, and not "." or ".." and "recursive" option was checked, get files for this folder
+            } elseif ($recursive && $isDirectory && isset($pathInfo['basename']) && !in_array($pathInfo['basename'], array('.', '..'), true)) {
+                $subfolderFiles = $this->getAllFiles($aFile, $targetPath, $sourcePath, $recursive);
+				$transferredFiles = array_merge($transferredFiles, $subfolderFiles);
+            }
+        }
+		return $transferredFiles;
+    }
+
 	/**
 	 * Performs an export of files according to the given FTP configuration.
 	 *
@@ -141,14 +188,12 @@ class ImportExport {
 	 */
 	public function exportAction($ftp) {
 		// Create the necessary drivers
-		/** @var \Cobweb\Ftpimportexport\Driver\LocalDriver $fromDriver */
-		$fromDriver = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Driver\\LocalDriver');
-		/** @var \Cobweb\Ftpimportexport\Driver\FtpDriver $toDriver */
-		$toDriver = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Driver\\FtpDriver');
-		$toDriver->connect($ftp);
+		$this->fromDriver = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Driver\\LocalDriver');
+		$this->toDriver = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Driver\\FtpDriver');
+		$this->toDriver->connect($ftp);
 
 		// Validate source path. This may throw an exception, but we let it bubble up.
-		$sourcePath = $fromDriver->validatePath($ftp['source_path']);
+		$sourcePath = $this->fromDriver->validatePath($ftp['source_path']);
 		// Check that path is allowed
 		if (!$this->isValidExportPath($sourcePath)) {
 			throw new ImportExportException(
@@ -158,22 +203,22 @@ class ImportExport {
 		}
 
 		// Validate target path and make sure it exists
-		$targetPath = $toDriver->validatePath($ftp['target_path']);
-		$toDriver->createDirectory($targetPath);
+		$targetPath = $this->toDriver->validatePath($ftp['target_path']);
+		$this->toDriver->createDirectory($targetPath);
 
-		if ($fromDriver->changeDirectory($sourcePath)) {
-			GeneralUtility::devLog('Current directory 1: ' . $fromDriver->getCurrentDirectory(), 'ftpimportrexport', 0);
-			$files = $fromDriver->fileList('');
+		if ($this->fromDriver->changeDirectory($sourcePath)) {
+			GeneralUtility::devLog('Current directory 1: ' . $this->fromDriver->getCurrentDirectory(), 'ftpimportrexport', 0);
+			$files = $this->fromDriver->fileList('');
 			$transferredFiles = array();
 			if ($this->extensionConfiguration['debug']) {
 				GeneralUtility::devLog('Files to handle', 'ftpimportexport', 0, $files);
 			}
 			foreach ($files as $aFile) {
-				// TODO: check what to do with directories (they are fetched, but with a warning). Maybe handle recursively (with a flag).
+				// TODO (JHE) : Apply the same recursive logic as in "importAction"
 				if ($this->isValidFile($aFile)) {
 					$sourceFilename = $sourcePath . $aFile;
 					$targetFilename = $targetPath . $aFile;
-					$result = $toDriver->put(
+					$result = $this->toDriver->put(
 						$sourceFilename,
 						$targetFilename
 					);
@@ -189,8 +234,8 @@ class ImportExport {
 			}
 			// Apply post-processing, if relevant
 			if (!empty($ftp['post_processing']) && count($transferredFiles) > 0) {
-				GeneralUtility::devLog('Current directory 2: ' . $fromDriver->getCurrentDirectory(), 'ftpimportrexport', 0);
-				$this->postProcessAction($fromDriver, $transferredFiles, $ftp);
+				GeneralUtility::devLog('Current directory 2: ' . $this->fromDriver->getCurrentDirectory(), 'ftpimportrexport', 0);
+				$this->postProcessAction($this->fromDriver, $transferredFiles, $ftp);
 			}
 		} else {
 			if ($this->extensionConfiguration['debug']) {
@@ -212,6 +257,7 @@ class ImportExport {
 	 * @param array $files List of files to act on
 	 * @param array $ftp Import/export configuration (from DB record)
 	 * @return void
+	 * @throws ImportExportException
 	 */
 	public function postProcessAction($driver, $files, $ftp) {
 		switch ($ftp['post_processing']) {
@@ -219,16 +265,27 @@ class ImportExport {
 				GeneralUtility::devLog('Current directory 3: ' . $driver->getCurrentDirectory(), 'ftpimportrexport', 0);
 				$targetPath = $driver->validatePath($ftp['post_processing_path']);
 				// Create target directory
+                $driver->changeDirectory('/');
 				$driver->createDirectory($targetPath);
 				foreach ($files as $aFile) {
-					$result = $driver->move(
-						$aFile,
-						$targetPath . $aFile
+                    $sourceFile = $ftp['source_path'] . $aFile;
+                    // Get relative path of the file to move so it keeps its parent folders
+                    $relativePathInfo = pathinfo($aFile);
+                    $relativeFolderPath = $relativePathInfo['dirname'];
+                    $targetFilename = $targetPath . $aFile;
+
+                    // Create destination folder
+                    $driver->changeDirectory('/');
+                    $driver->createDirectory($targetPath . $relativeFolderPath);
+
+                    $result = $driver->move(
+                        $sourceFile,
+                        $targetFilename
 					);
 					if (!$result && $this->extensionConfiguration['debug']) {
 						$message = sprintf(
 							'Post-processing: could not move file %s to %s',
-							$aFile,
+                            $sourceFile,
 							$targetPath . $aFile
 						);
 						GeneralUtility::devLog($message, 'ftpimportexport', 2);
@@ -237,11 +294,12 @@ class ImportExport {
 				break;
 			case 'delete':
 				foreach ($files as $aFile) {
-					$result = $driver->delete($aFile);
+                    $sourceFile = $ftp['source_path'] . $aFile;
+                    $result = $driver->delete($sourceFile);
 					if (!$result && $this->extensionConfiguration['debug']) {
 						$message = sprintf(
 							'Post-processing: could not delete file %s',
-							$aFile
+                            $sourceFile
 						);
 						GeneralUtility::devLog($message, 'ftpimportexport', 2);
 					}

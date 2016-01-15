@@ -60,6 +60,9 @@
 			<trans-unit id="tx_ftpimportexport_records.post_processing_path">
 				<source>Move to</source>
 			</trans-unit>
+            <trans-unit id="tx_ftpimportexport_records.recursive">
+                <source>Get files recursively</source>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

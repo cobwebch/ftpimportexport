@@ -133,11 +133,19 @@ return array(
 				'max' => '100'
 			)
 		),
+        'recursive' => array(
+            'exclude' => 0,
+            'label' => 'LLL:EXT:ftpimportexport/Resources/Private/Language/locallang_db.xlf:tx_ftpimportexport_records.recursive',
+            'config' => array(
+                'type' => 'check',
+                'default' => 0
+            )
+        ),
 	),
 	'types' => array(
 		'0' => array(
 			'showitem' => '
-				hidden, transfer_type, title, source_path;LLL:EXT:ftpimportexport/Resources/Private/Language/locallang_db.xlf:tx_ftpimportexport_records.source_path_import, target_path;LLL:EXT:ftpimportexport/Resources/Private/Language/locallang_db.xlf:tx_ftpimportexport_records.target_path_import, pattern, ftp_host, ftp_user, ftp_password,
+				hidden, transfer_type, title, source_path;LLL:EXT:ftpimportexport/Resources/Private/Language/locallang_db.xlf:tx_ftpimportexport_records.source_path_import, target_path;LLL:EXT:ftpimportexport/Resources/Private/Language/locallang_db.xlf:tx_ftpimportexport_records.target_path_import, recursive, pattern, ftp_host, ftp_user, ftp_password,
 				--div--;LLL:EXT:ftpimportexport/Resources/Private/Language/locallang_db.xlf:tx_ftpimportexport_records.tab.post_processing, post_processing, post_processing_path
 			'
 		),

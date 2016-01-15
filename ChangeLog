@@ -1,3 +1,7 @@
+2016-01-15  Julien Henchoz <typo3@cobweb.ch>
+
+	* Added feature to import files recursively
+
 2013-12-17  Francois Suter <typo3@cobweb.ch>
 
 	* Full rewrite, refactoring, namespaces, etc.
