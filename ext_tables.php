@@ -1,5 +1,7 @@
 <?php
-if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
+if (!defined ('TYPO3_MODE')) {
+	die ('Access denied.');
+}
 
 // Add record icons to sprite
 $extensionRelativePath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY);
@@ -15,4 +17,3 @@ $icons = array(
 	'tx_ftpimportexport_records',
 	'EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_csh.xlf'
 );
-?>

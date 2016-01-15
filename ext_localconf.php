@@ -10,4 +10,3 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['Cobweb\\Ftpimpo
 	'description' => 'LLL:EXT:ftpimportexport/Resources/Private/Language/locallang.xlf:ftpimportexport_configuration',
 	'additionalFields'	=> 'Cobweb\\Ftpimportexport\\Task\\ImportExportAdditionalFields'
 );
-?>

@@ -4,7 +4,7 @@ namespace Cobweb\Ftpimportexport\Task;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2013 Francois Suter <typo3@cobweb.ch>
+*  (c) 2013-2016 Francois Suter <typo3@cobweb.ch>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,6 +24,7 @@ namespace Cobweb\Ftpimportexport\Task;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Cobweb\Ftpimportexport\Domain\Repository\ImportConfigurationRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -33,7 +34,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * @package	TYPO3
  * @subpackage tx_ftpimportexport
  */
-
 class ImportExport extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	public $configuration;
 
@@ -44,7 +44,7 @@ class ImportExport extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 	 */
 	public function execute() {
 		// Get the list of configurations to run
-		/** @var \Cobweb\Ftpimportexport\Domain\Repository\ImportConfigurationRepository $configurationRepository */
+		/** @var ImportConfigurationRepository $configurationRepository */
 		$configurationRepository = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Domain\\Repository\\ImportConfigurationRepository');
 		if ($this->configuration == 'all') {
 			$configurations = $configurationRepository->findAll();
@@ -79,7 +79,7 @@ class ImportExport extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 		if ($this->configuration == 'all') {
 			$info = $this->getLanguageObject()->sL('LLL:EXT:ftpimportexport/Resources/Private/Language/locallang.xlf:all_configurations');
 		} else {
-			/** @var \Cobweb\Ftpimportexport\Domain\Repository\ImportConfigurationRepository $configurationRepository */
+			/** @var ImportConfigurationRepository $configurationRepository */
 			$configurationRepository = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Domain\\Repository\\ImportConfigurationRepository');
 			$configuration = $configurationRepository->findByUid($this->configuration);
 			$info = sprintf(
@@ -100,4 +100,3 @@ class ImportExport extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 		return $GLOBALS['LANG'];
 	}
 }
-?>

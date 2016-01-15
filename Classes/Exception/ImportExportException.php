@@ -4,7 +4,7 @@ namespace Cobweb\Ftpimportexport\Exception;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Francois Suter <support@cobweb.ch>
+ *  (c) 2013-2016 Francois Suter <support@cobweb.ch>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -31,4 +31,3 @@ namespace Cobweb\Ftpimportexport\Exception;
  */
 class ImportExportException extends \Exception {
 }
-?>

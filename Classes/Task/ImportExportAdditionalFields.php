@@ -4,7 +4,7 @@ namespace Cobweb\Ftpimportexport\Task;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2013 Francois Suter <typo3@cobweb.ch>
+*  (c) 2013-2016 Francois Suter <typo3@cobweb.ch>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,6 +24,8 @@ namespace Cobweb\Ftpimportexport\Task;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Abstract class which defines a simple file driver (this is much simpler than a FAL driver).
  *
@@ -31,7 +33,6 @@ namespace Cobweb\Ftpimportexport\Task;
  * @package	TYPO3
  * @subpackage tx_ftpimportexport
  */
-
 class ImportExportAdditionalFields implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface {
 	/**
 	 * Gets additional fields to render in the form to add/edit a task
@@ -43,7 +44,7 @@ class ImportExportAdditionalFields implements \TYPO3\CMS\Scheduler\AdditionalFie
 	 */
 	public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $schedulerModule) {
 		/** @var \Cobweb\Ftpimportexport\Domain\Repository\ImportConfigurationRepository $configurationRepository */
-		$configurationRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Domain\\Repository\\ImportConfigurationRepository');
+		$configurationRepository = GeneralUtility::makeInstance('Cobweb\\Ftpimportexport\\Domain\\Repository\\ImportConfigurationRepository');
 		$configurations = $configurationRepository->findAll();
 
 		// Initialize extra field value
@@ -117,4 +118,3 @@ class ImportExportAdditionalFields implements \TYPO3\CMS\Scheduler\AdditionalFie
 		return $GLOBALS['LANG'];
 	}
 }
-?>

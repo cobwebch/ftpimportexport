@@ -4,7 +4,7 @@ namespace Cobweb\Ftpimportexport\Driver;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2013 Francois Suter <typo3@cobweb.ch>
+*  (c) 2013-2016 Francois Suter <typo3@cobweb.ch>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,6 +24,7 @@ namespace Cobweb\Ftpimportexport\Driver;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use Cobweb\Ftpimportexport\Exception\ImportExportException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -50,7 +51,7 @@ class LocalDriver extends AbstractDriver {
 	 *
 	 * @param string $path Path to handle
 	 * @return string Modified and validated path
-	 * @throws \Cobweb\Ftpimportexport\Exception\ImportExportException
+	 * @throws ImportExportException
 	 */
 	public function validatePath($path) {
 		// Make path absolute
@@ -65,7 +66,7 @@ class LocalDriver extends AbstractDriver {
 		// Remove double slashes due to user's input mistake
 		$localPath = str_replace('//', '/', $localPath);
 		if (!GeneralUtility::isAllowedAbsPath($localPath)) {
-			throw new \Cobweb\Ftpimportexport\Exception\ImportExportException(
+			throw new ImportExportException(
 				sprintf('Path not allowed (%s)', $localPath),
 				1389105498
 			);
@@ -106,7 +107,7 @@ class LocalDriver extends AbstractDriver {
 	 */
 	public function createDirectory($path) {
 		try {
-			\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir_deep($path);
+			GeneralUtility::mkdir_deep($path);
 			return TRUE;
 		}
 		catch (\Exception $e) {
@@ -201,4 +202,3 @@ class LocalDriver extends AbstractDriver {
 		return $fileList;
 	}
 }
-?>

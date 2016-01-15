@@ -4,7 +4,7 @@ namespace Cobweb\Ftpimportexport\Driver;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2013 Francois Suter <typo3@cobweb.ch>
+*  (c) 2013-2016 Francois Suter <typo3@cobweb.ch>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
