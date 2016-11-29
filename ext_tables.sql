@@ -23,4 +23,4 @@ CREATE TABLE tx_ftpimportexport_records (
 
 	PRIMARY KEY (uid),
 	KEY parent (pid)
-) ENGINE=InnoDB;
+);

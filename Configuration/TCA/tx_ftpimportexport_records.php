@@ -20,9 +20,9 @@ return array(
 		'dividers2tabs' => TRUE,
 		'typeicon_column' => 'transfer_type',
 		'typeicon_classes' => array(
-			'default' => 'extensions-ftpimportexport-default',
-			'import' => 'extensions-ftpimportexport-import',
-			'export' => 'extensions-ftpimportexport-export'
+			'default' => 'tx_ftpimportexport-default',
+			'import' => 'tx_ftpimportexport-import',
+			'export' => 'tx_ftpimportexport-export'
 		),
 	),
 	'interface' => array(

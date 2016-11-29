@@ -4,13 +4,29 @@ if (!defined ('TYPO3_MODE')) {
 }
 
 // Add record icons to sprite
-$extensionRelativePath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY);
-$icons = array(
-	'default' => $extensionRelativePath . 'Resources/Public/Images/tx_ftpimportexport_records.png',
-	'import' => $extensionRelativePath . 'Resources/Public/Images/tx_ftpimportexport_records_import.png',
-	'export' => $extensionRelativePath . 'Resources/Public/Images/tx_ftpimportexport_records_export.png'
+/** @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */
+$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
+$iconRegistry->registerIcon(
+        'tx_ftpimportexport-default',
+        \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+        [
+            'source' => 'EXT:ftpimportexport/Resources/Public/Images/DefaultIcon.svg'
+        ]
 );
-\TYPO3\CMS\Backend\Sprite\SpriteManager::addSingleIcons($icons, $_EXTKEY);
+$iconRegistry->registerIcon(
+        'tx_ftpimportexport-export',
+        \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+        [
+            'source' => 'EXT:ftpimportexport/Resources/Public/Images/ExportIcon.svg'
+        ]
+);
+$iconRegistry->registerIcon(
+        'tx_ftpimportexport-import',
+        \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+        [
+            'source' => 'EXT:ftpimportexport/Resources/Public/Images/ImportIcon.svg'
+        ]
+);
 
 // Add context sensitive help (csh) for the tx_ftpimportexport_records table
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
